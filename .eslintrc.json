@@ -1,0 +1,32 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "google"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "max-len": "off",
+        "require-jsdoc": "off",
+        "react/prop-types": "off",
+        "react/display-name": "off",
+        "react/react-in-jsx-scope": "off",
+        "no-trailing-spaces": "off",
+        "spaced-comment": "off",
+        "new-cap": "off"
+    }
+}
