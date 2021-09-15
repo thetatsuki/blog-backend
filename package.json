@@ -20,12 +20,20 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 4,
+    "bracketSpacing": false,
+    "trailingComma": "all"
+  },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
     "@nestjs/core": "^7.6.15",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^7.6.15",
     "@nestjs/typeorm": "^8.0.2",
+    "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "mysql": "^2.18.1",
     "pg": "^8.7.1",

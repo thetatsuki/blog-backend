@@ -6,12 +6,11 @@ import {UserEntity} from './entities/user.entity';
 import {Repository} from 'typeorm';
 
 @Injectable()
-export class UserService {
+export class UsersService {
     constructor(
         @InjectRepository(UserEntity)
         private userService: Repository<UserEntity>,
     ) {}
-
 
     create(dto: CreateUserDto) {
         const user = this.userService.save(dto);
