@@ -4,6 +4,7 @@ import {UpdatePostDto} from './dto/update-post.dto';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {PostEntity} from './entities/post.entity';
+import {SearchPostDto} from './dto/search-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -17,7 +18,63 @@ export class PostsService {
     }
 
     findAll() {
-        return this.postsService.find();
+        const posts = this.postsService.find({
+            order: {
+                createdAt: 'DESC',
+            },
+        });
+
+        return posts;
+    }
+
+    async findPopular() {
+        const qb = this.postsService.createQueryBuilder();
+
+        qb.orderBy('views', 'DESC');
+        qb.limit(10);
+
+        const [items, total] = await qb.getManyAndCount();
+
+        return {
+            items,
+            total,
+        };
+    }
+
+    async findSearch(dto: SearchPostDto) {
+        const qb = this.postsService.createQueryBuilder('p');
+
+        qb.limit(dto.limit || 0);
+        qb.take(dto.take || 10);
+
+        if (dto.views) {
+            qb.orderBy('views', dto.views);
+        }
+
+        if (dto.body) {
+            qb.where(`p.body ILIKE :body`);
+        }
+
+        if (dto.title) {
+            qb.where(`p.title ILIKE :title`);
+        }
+
+        if (dto.tag) {
+            qb.where(`p.tag ILIKE :tag`);
+        }
+
+        qb.setParameters({
+            title: `%${dto.title}%`,
+            tag: `%${dto.tag}%`,
+            body: `%${dto.body}%`,
+        });
+
+        const [items, total] = await qb.getManyAndCount();
+
+        return {
+            items,
+            total,
+        };
     }
 
     async findOne(id: number) {
