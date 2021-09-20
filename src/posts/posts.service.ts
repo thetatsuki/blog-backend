@@ -52,15 +52,15 @@ export class PostsService {
         }
 
         if (dto.body) {
-            qb.where(`p.body ILIKE :body`);
+            qb.andWhere(`p.body ILIKE :body`);
         }
 
         if (dto.title) {
-            qb.where(`p.title ILIKE :title`);
+            qb.andWhere(`p.title ILIKE :title`);
         }
 
         if (dto.tag) {
-            qb.where(`p.tag ILIKE :tag`);
+            qb.andWhere(`p.tags ILIKE :tag`);
         }
 
         qb.setParameters({
@@ -78,15 +78,17 @@ export class PostsService {
     }
 
     async findOne(id: number) {
-        const post = await this.postsService.findOne(+id);
+        const qb = await this.postsService.createQueryBuilder('posts');
 
-        console.log(post);
+        await qb
+            .whereInIds(id)
+            .update()
+            .set({
+                views: () => `views + 1`,
+            })
+            .execute();
 
-        if (!post) {
-            throw new NotFoundException('Статья не найдена');
-        }
-
-        return post;
+        return this.postsService.findOne(id);
     }
 
     async update(id: number, dto: UpdatePostDto) {
