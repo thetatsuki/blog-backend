@@ -1,4 +1,6 @@
 import {IsString, IsEmail, MinLength} from 'class-validator';
+import {UniqueColumn} from '../../auth/validations/unique-column';
+import {UserEntity} from '../entities/user.entity';
 
 export class CreateUserDto {
     @MinLength(3, {message: 'Имя не менее 3 символов'})
@@ -6,6 +8,7 @@ export class CreateUserDto {
     fullName: string;
 
     @IsEmail(undefined, {message: 'Неверная почта'})
+    @UniqueColumn(UserEntity)
     email: string;
 
     @IsString()
