@@ -5,6 +5,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {UserEntity} from './entities/user.entity';
 import {Repository} from 'typeorm';
 import {LoginUserDto} from './dto/login-user.dto';
+import {SearchUserDto} from './dto/search-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,11 +19,35 @@ export class UsersService {
         return user;
     }
 
-    findAll() {
-        return this.userService.find();
+    async findSearch(dto: SearchUserDto) {
+        const qb = this.userService.createQueryBuilder('u');
+
+        qb.limit(dto.limit || 0);
+        qb.take(dto.take || 10);
+
+        if (dto.email) {
+            qb.andWhere(`u.email ILIKE :email`);
+        }
+        if (dto.fullName) {
+            qb.andWhere(`u.fullName ILIKE :fullName`);
+        }
+
+        qb.setParameters({
+            email: `%${dto.email}%`,
+            fullName: `%${dto.fullName}%`,
+        });
+
+        const [items, count] = await qb.getManyAndCount();
+
+        return {items, count};
     }
 
-    findById(id: number) {
+    async findById(id: number) {
+        const {password, ...user} = await this.userService.findOne(id);
+        return user;
+    }
+
+    findMyProfile(id: number) {
         return this.userService.findOne(id);
     }
 
@@ -31,10 +56,6 @@ export class UsersService {
     }
 
     update(id: number, updateUserDto: UpdateUserDto) {
-        return `This action updates a #${id} user`;
-    }
-
-    remove(id: number) {
-        return `This action removes a #${id} user`;
+        this.userService.update(id, updateUserDto);
     }
 }
