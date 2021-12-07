@@ -1,8 +1,9 @@
-import {Controller, Request, Post, UseGuards, Body} from '@nestjs/common';
+import {Controller, Response, Request, Post, UseGuards, Body, Get} from '@nestjs/common';
 
 import {AuthService} from './auth.service';
 import {LocalAuthGuard} from './guards/local-auth.guard';
 import {CreateUserDto} from '../users/dto/create-user.dto';
+import {VkontakteAuthGuard} from './guards/vkontakte-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -18,5 +19,15 @@ export class AuthController {
     async register(@Body() dto: CreateUserDto) {
         console.log(dto);
         return this.authService.register(dto);
+    }
+
+    @UseGuards(VkontakteAuthGuard)
+    @Get('vkontakte')
+    async authVkontakte(@Request() req) {}
+
+    @UseGuards(VkontakteAuthGuard)
+    @Get('vkontakte/callback')
+    vkontakteAuthRedirect(@Request() req, @Response() res) {
+        return this.authService.authVkontakte(req, res);
     }
 }

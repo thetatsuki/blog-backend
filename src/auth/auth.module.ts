@@ -8,6 +8,7 @@ import {LocalStrategy} from './strategy/local.strategy';
 import {JwtStrategy} from './strategy/jwt.strategy';
 import {UsersModule} from '../users/users.module';
 import {jwtConstants} from './constants/jwtConstants';
+import {VkStrategy} from './strategy/vk.strategy';
 
 @Module({
     imports: [
@@ -19,6 +20,6 @@ import {jwtConstants} from './constants/jwtConstants';
         }),
     ],
     controllers: [AuthController],
-    providers: [AuthService, LocalStrategy, JwtStrategy],
+    providers: [AuthService, LocalStrategy, JwtStrategy, VkStrategy],
 })
 export class AuthModule {}

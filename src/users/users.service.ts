@@ -47,8 +47,9 @@ export class UsersService {
         return user;
     }
 
-    findMyProfile(id: number) {
-        return this.userService.findOne(id);
+    async findMyProfile(id: number) {
+        const {password, ...user} = await this.userService.findOne(id);
+        return user;
     }
 
     findByCond(cond: LoginUserDto) {

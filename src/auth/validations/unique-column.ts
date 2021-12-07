@@ -6,7 +6,6 @@ import {
     ValidatorConstraintInterface,
 } from 'class-validator';
 import {getManager} from 'typeorm';
-import {UserEntity} from '../../users/entities/user.entity';
 
 @ValidatorConstraint({async: true})
 export class UniqueOnDatabaseExistConstraint implements ValidatorConstraintInterface {
@@ -20,7 +19,7 @@ export class UniqueOnDatabaseExistConstraint implements ValidatorConstraintInter
 
 export function UniqueColumn(entity: Function, validationOptions?: ValidationOptions) {
     validationOptions = {
-        ...{message: '$value почта уже занята'},
+        ...{message: 'почта уже занята'},
         ...validationOptions,
     };
     return function (object: Object, propertyName: string) {

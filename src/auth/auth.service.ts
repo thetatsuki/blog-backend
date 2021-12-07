@@ -48,4 +48,30 @@ export class AuthService {
             throw new ForbiddenException(e);
         }
     }
+
+    async authVkontakte(req, res) {
+        let userData: CreateUserDto;
+
+        const obj: CreateUserDto = {
+            fullName: req.user.username,
+            email: `${req.user.username}@mail.ru`,
+        };
+
+        const {password, ...findUser} = await this.usersService.findByCond(obj);
+
+        if (findUser) {
+            userData = await this.login({...findUser, password});
+        } else {
+            userData = await this.register({
+                ...obj,
+                password: 'prikol',
+            });
+        }
+
+        res.send(
+            `<script>window.opener.postMessage('${JSON.stringify(
+                userData,
+            )}', '*');window.close();</script>`,
+        );
+    }
 }
